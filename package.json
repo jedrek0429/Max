@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@types/node": "^17.0.8",
+    "@types/pg": "^8.6.3",
+    "discord.js": "^13.5.0",
+    "http": "^0.0.1-security",
+    "pg": "^8.7.1"
+  }
+}
