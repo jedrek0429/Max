@@ -17,7 +17,7 @@ export default class Client extends DiscordClient {
   }
 	public commandManager: CommandManager = new CommandManager(this);
   public async start(): Promise<void> {
-    this.login();
+    this.login().then(() => console.log("Logging in..."));
     this.db.connect()
 			.then(() => console.log("Conected to the database!"))
 			.catch(e => console.error);

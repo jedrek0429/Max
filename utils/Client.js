@@ -48,7 +48,7 @@ class Client extends discord_js_1.Client {
     }
     start() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.login();
+            this.login().then(() => console.log("Logging in..."));
             this.db.connect()
                 .then(() => console.log("Conected to the database!"))
                 .catch(e => console.error);

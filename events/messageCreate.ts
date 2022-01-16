@@ -1,25 +1,48 @@
 import { ClientEvents, Message } from "discord.js";
 import Client from "../utils/Client";
-import { inspect } from "util";
+import { inspect, promisify } from "util";
+import { transpile } from "typescript";
+import { exec as unpromisifiedExec } from "child_process";
+const exec = promisify(unpromisifiedExec);
 
 export const name: keyof ClientEvents = "messageCreate";
 export const run = async (client: Client, msg: Message) => {
-	if (msg.author.bot || !["593387576317050890", "710772337045143572"].includes(msg.author.id)) return;
-	if (msg.content.toLowerCase().startsWith("eval")) {
-		const args = msg.content.split(" ").slice(1);
+	if (msg.author.bot || !["593387576317050890", "710772337045143572", "709685885431578634"].includes(msg.author.id)) return;
+	const code = msg.content.split(" ").slice(1).join(" ");
+	if (msg.content.toLowerCase().startsWith("jseval")) {
 		try {
-      const evaled = eval(args.join(" "));
+      const evaled = eval(code);
       const cleaned = await clean(evaled, client)
 			msg.reply(`\`\`\`js\n${cleaned}\n\`\`\``);
     } catch (err) {
 			const cleaned = await clean(err.toString(), client);
       msg.reply(`\`ERROR\` \`\`\`xl\n${err}\n\`\`\``);
     }
+	} else if (msg.content.toLowerCase().startsWith("tseval") || msg.content.toLowerCase().startsWith("eval")) {
+		try {
+      const evaled = eval(transpile(code));
+      const cleaned = await clean(evaled, client)
+			msg.reply(`\`\`\`js\n${cleaned}\n\`\`\``);
+    } catch (err) {
+			const cleaned = await clean(err.toString(), client);
+      msg.reply(`\`ERROR\` \`\`\`xl\n${err}\n\`\`\``);
+		}
+  } else if (msg.content.toLowerCase().startsWith("exec")) {
+		const toExec = code;
+    msg.reply("Executing...")
+			.then((m) => {
+				exec(toExec)
+					.then(result => {
+						if (result.stderr) m.edit(`\`ERROR\`\n\`\`\`xl\n${result.stderr}\n\`\`\``);
+						m.edit(`\`\`\`xl\n${result.stdout.toString().trim()}\n\`\`\``)
+					})
+					.catch(e => m.edit(`\`ERROR\`\n\`\`\`xl\n${e}\n\`\`\``));
+		});
 	}
 }
 
 const clean = async (text: any, client: Client) => {
-	if (text.constructor.name == "Promise")
+	if (text.constructor?.name == "Promise")
   	text = await text;
 
   text = inspect(text);
