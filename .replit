@@ -1,5 +1,0 @@
-<<<<<<< HEAD
-run = "tsc && node index.js"
-=======
-run = "tsc && node index.js"
->>>>>>> origin/main
