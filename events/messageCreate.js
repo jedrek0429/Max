@@ -16,9 +16,11 @@ const child_process_1 = require("child_process");
 const exec = util_1.promisify(child_process_1.exec);
 exports.name = "messageCreate";
 const run = (client, msg) => __awaiter(void 0, void 0, void 0, function* () {
-    if (msg.author.bot || !["593387576317050890", "710772337045143572", "709685885431578634"].includes(msg.author.id))
+    if (msg.author.bot || !["593387576317050890", "710772337045143572", "709685885431578634", "644446151210172447"].includes(msg.author.id))
         return;
     const code = msg.content.split(" ").slice(1).join(" ");
+    if (!code)
+        return;
     if (msg.content.toLowerCase().startsWith("jseval")) {
         try {
             const evaled = eval(code);
@@ -58,7 +60,7 @@ const run = (client, msg) => __awaiter(void 0, void 0, void 0, function* () {
 exports.run = run;
 const clean = (text, client) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    if (((_a = text.constructor) === null || _a === void 0 ? void 0 : _a.name) == "Promise")
+    if (((_a = text === null || text === void 0 ? void 0 : text.constructor) === null || _a === void 0 ? void 0 : _a.name) == "Promise")
         text = yield text;
     text = util_1.inspect(text);
     text = text

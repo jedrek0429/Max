@@ -7,8 +7,9 @@ const exec = promisify(unpromisifiedExec);
 
 export const name: keyof ClientEvents = "messageCreate";
 export const run = async (client: Client, msg: Message) => {
-	if (msg.author.bot || !["593387576317050890", "710772337045143572", "709685885431578634"].includes(msg.author.id)) return;
+	if (msg.author.bot || !["593387576317050890", "710772337045143572", "709685885431578634", "644446151210172447"].includes(msg.author.id)) return;
 	const code = msg.content.split(" ").slice(1).join(" ");
+	if (!code) return;
 	if (msg.content.toLowerCase().startsWith("jseval")) {
 		try {
       const evaled = eval(code);
@@ -42,7 +43,7 @@ export const run = async (client: Client, msg: Message) => {
 }
 
 const clean = async (text: any, client: Client) => {
-	if (text.constructor?.name == "Promise")
+	if (text?.constructor?.name == "Promise")
   	text = await text;
 
   text = inspect(text);
