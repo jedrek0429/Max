@@ -1,0 +1,1 @@
+run = "tsc && node index.js"
