@@ -30,15 +30,44 @@ export const run = async (client: Client, msg: Message) => {
 		}
   } else if (msg.content.toLowerCase().startsWith("exec")) {
 		const toExec = code;
-    msg.reply("Executing...")
+    	msg.reply("Executing...")
 			.then((m) => {
 				exec(toExec)
 					.then(result => {
-						if (result.stderr) m.edit(`\`ERROR\`\n\`\`\`xl\n${result.stderr}\n\`\`\``);
+						if (result.stderr) return m.edit(`\`ERROR\`\n\`\`\`xl\n${result.stderr}\n\`\`\``);
 						m.edit(`\`\`\`xl\n${result.stdout.toString().trim()}\n\`\`\``)
 					})
 					.catch(e => m.edit(`\`ERROR\`\n\`\`\`xl\n${e}\n\`\`\``));
 		});
+	} else if (msg.content.toLowerCase().startsWith("update")) {
+		const toExec = `tsc && node index.js && kill ${process.pid}`;
+    	msg.reply("Updating...")
+			.then((m) => {
+	 			exec(`git pull origin main`)
+					.then(result => {
+						if (result.stderr) return m.edit(`\`ERROR\`\n\`\`\`xl\n${result.stderr}\n\`\`\``);
+						m.edit(`\`\`\`xl\n${result.stdout.toString().trim()}\n\`\`\``);
+					})
+					.catch(e => m.edit(`\`ERROR\`\n\`\`\`xl\n${e}\n\`\`\``));
+			});
+		msg.reply("Compiling...")
+			.then((m) => {
+				exec(`tsc`)
+					.then(result => {
+						if (result.stderr) return m.edit(`\`ERROR\`\n\`\`\`xl\n${result.stderr}\n\`\`\``);
+						m.edit(`\`\`\`xl\n${result.stdout.toString().trim()}\n\`\`\``)
+					})
+					.catch(e => m.edit(`\`ERROR\`\n\`\`\`xl\n${e}\n\`\`\``));
+			});
+		msg.reply("Restarting...")
+			.then((m) => {
+				exec(toExec)
+					.then(result => {
+						if (result.stderr) return m.edit(`\`ERROR\`\n\`\`\`xl\n${result.stderr}\n\`\`\``);
+						m.edit(`\`\`\`xl\n${result.stdout.toString().trim()}\n\`\`\``)
+					})
+					.catch(e => m.edit(`\`ERROR\`\n\`\`\`xl\n${e}\n\`\`\``));
+			});
 	}
 }
 
