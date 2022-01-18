@@ -1,4 +1,4 @@
-import { Client as DiscordClient, Intents, Collection } from "discord.js";
+import { Client as DiscordClient, Intents, Collection, Message } from "discord.js";
 import { Client as DbClient } from "pg";
 import Command from "./Command";
 import Event from "./Event";
@@ -8,6 +8,7 @@ import * as path from "path";
 
 export default class Client extends DiscordClient {
   public commands: Collection<string, Command> = new Collection();
+  public snipes: Collection<string, Collection<string, Message[]>> = new Collection();
   public db: DbClient = new DbClient({
 		connectionString: process.env["PGURI"]
 	});
