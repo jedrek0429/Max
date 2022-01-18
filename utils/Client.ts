@@ -5,6 +5,7 @@ import Event from "./Event";
 import CommandManager from "../utils/CommandManager";
 import { readdirSync } from "fs";
 import * as path from "path";
+import { Server, createServer } from "http";
 
 export default class Client extends DiscordClient {
   public commands: Collection<string, Command> = new Collection();
@@ -12,6 +13,7 @@ export default class Client extends DiscordClient {
   public db: DbClient = new DbClient({
 		connectionString: process.env["PGURI"]
 	});
+	public http: Server = createServer((req, res) => res.end('repl.it host 24/7')).listen(3000);
   public constructor() {
     super({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]});
     this.token = process.env["TOKEN"]!;

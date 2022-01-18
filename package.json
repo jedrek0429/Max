@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@types/http-server": "^0.12.1",
     "@types/node": "^17.0.8",
     "@types/pg": "^8.6.3",
     "discord.js": "^13.5.0",

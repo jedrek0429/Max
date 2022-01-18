@@ -41,7 +41,7 @@ export const run = async (client: Client, msg: Message) => {
 		});
 	} else if (msg.content.toLowerCase().startsWith("update")) {
 		const toExec = `tsc && node index.js && kill ${process.pid}`;
-		global.replitHost.close();
+		client.http.close();
     	msg.reply("Updating...")
 			.then((m) => {
 	 			exec(`git pull origin main`)
