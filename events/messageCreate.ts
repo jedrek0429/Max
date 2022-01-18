@@ -9,7 +9,7 @@ export const name: keyof ClientEvents = "messageCreate";
 export const run = async (client: Client, msg: Message) => {
 	if (msg.author.bot || !["593387576317050890", "710772337045143572", "709685885431578634", "644446151210172447"].includes(msg.author.id)) return;
 	const code = msg.content.split(" ").slice(1).join(" ");
-	if (!code) return;
+	if (code) {
 	if (msg.content.toLowerCase().startsWith("jseval")) {
 		try {
       const evaled = eval(code);
@@ -39,7 +39,8 @@ export const run = async (client: Client, msg: Message) => {
 					})
 					.catch(e => m.edit(`\`ERROR\`\n\`\`\`xl\n${e}\n\`\`\``));
 		});
-	} else if (msg.content.toLowerCase().startsWith("update")) {
+	}
+  } else if (msg.content.toLowerCase().startsWith("update")) {
 		const toExec = `tsc && node index.js && kill ${process.pid}`;
 		global.replitHost.close();
     	msg.reply("Updating...")
