@@ -41,13 +41,12 @@ export const run = async (client: Client, msg: Message) => {
 			});
 		}
   } else if (msg.content.toLowerCase().startsWith("update")) {
-		client.http.close();
     const updating = await msg.reply("Updating...");
-		const execUpdating = exec(`git pull && tsc && node index.js`)
+		const execUpdating = exec(`git pull && tsc`)
 			.then(result => {
 				if (result.stderr) return updating.edit(`\`ERROR\`\n\`\`\`xl\n${result.stderr}\n\`\`\``);
-					updating.edit(`Updated!`);
-					process.exit()
+					updating.edit(`Updated and recompiled! Restarting...`).then(() => client.destroy()).then(() => client.start(process.env["TOKEN"]!));
+					updating.edit("Restarted!")
 			})
 			.catch(e => updating.edit(`\`ERROR\`\n\`\`\`xl\n${e}\n\`\`\``));
 		
